@@ -33,10 +33,11 @@ public class BrandController {
 
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findBrands(@PathVariable Long id) {
-        Optional<Brand> findingBrand = brandRepository.findById(id);
-        if (findingBrand.isPresent()) {
+        Brand findingBrand = brandRepository.findById(id).orElse(null);
+        if (findingBrand != null) {
+            brandRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "Find Brand successful!", findingBrand)
+                    new ResponseObject("OK", "Find Brand successful!", "")
             );
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
